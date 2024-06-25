@@ -1,0 +1,130 @@
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+
+  .chess-board {
+    width: 400px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+  }
+  
+  .board {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+  .square {
+    width: 12.5%;
+    height: 12.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .chess-piece {
+    z-index: 1; // Ensures the chess piece image is the topmost layer, import for event handlers
+  }
+  
+  .light {
+    background-color: #f0d9b5;
+
+    &.selected {
+      background-color: #829769;
+    }
+
+    &.moved {
+      background-color: #CDD26A;
+    }
+  }
+  
+  .dark {
+    background-color: #b58863;
+
+    &.selected {
+      background-color: #646F40;
+    }
+
+    &.moved {
+      background-color: #AAA23A;
+    }
+  }
+
+  .label {
+    position: absolute;
+    font-size: 11px;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 700;
+    pointer-events: none; // To prevent interference with any interactions
+
+    &.bottom {
+      bottom: 0px;
+      left: 4px;
+    }
+
+    &.right {
+      top: 2px;
+      right: 2px;
+    }
+
+    &.label-light {
+      color: rgb(240, 217, 181);
+    }
+
+    &.label-dark {
+      color: rgb(148, 111, 81);
+    }
+  }
+
+  .circle-overlay {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    border: 3px solid rgba(0, 128, 0, 0.6);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .legal-move-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(rgba(20, 85, 30, 0.5) 19%, rgba(0, 0, 0, 0) 20%);
+  }
+
+  .line-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+
+    line {
+      stroke: rgba(0, 128, 0, 0.6);
+      stroke-width: 6;
+      stroke-linecap: round;
+      //marker-end: url(#arrowhead-g);
+    }
+  }
+
+  .potential-capture-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(transparent 0%, transparent 79%, rgba(20, 85, 0, 0.3) 80%);
+    pointer-events: none;
+  }
+}
