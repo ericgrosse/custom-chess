@@ -57,7 +57,37 @@ class Chess {
   }
 
   isCheck() {
-    // Placeholder for check logic
+    // Find the king's position
+    let kingPosition = null;
+    let color = this.turn;
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const piece = this.board[row][col];
+        if (piece && piece.type === 'k' && piece.color === color) {
+          kingPosition = this.indicesToSquare(col, row);
+          break;
+        }
+      }
+      if (kingPosition) break;
+    }
+
+    if (!kingPosition) {
+      throw new Error(`Cannot find ${color} king on the board.`);
+    }
+
+    // Check if any opponent's piece can attack the king
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const piece = this.board[row][col];
+        if (piece && piece.color !== color) {
+          const moves = this.moves(this.indicesToSquare(col, row));
+          if (moves.some(move => move.to === kingPosition)) {
+            return true;
+          }
+        }
+      }
+    }
+
     return false;
   }
 
@@ -75,7 +105,8 @@ class Chess {
     return col >= 0 && col < 8 && row >= 0 && row < 8;
   }
 
-  moves({ square, verbose }) {
+  moves({ square }) {
+    if (!square) return [];
     const [col, row] = this.squareToIndices(square);
     const piece = this.board[row][col];
     if (!piece) return [];
