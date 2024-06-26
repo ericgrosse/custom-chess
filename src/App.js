@@ -14,7 +14,7 @@ import blackQueen from './images/black-queen.svg';
 import blackKing from './images/black-king.svg';
 import moveSound from './audio/move.mp3';
 import captureSound from './audio/capture.mp3';
-import { Chess } from 'chess.js';
+import Chess from './helpers/chessLogic.js';
 
 function App() {
   const chess = useRef(new Chess());
@@ -98,7 +98,7 @@ function App() {
   const handlePieceClick = (e, square) => {
     e.stopPropagation();
     const piece = chess.current.get(square);
-    if (piece && piece.color === chess.current.turn()) {
+    if (piece && piece.color === chess.current.turn) {
       const moves = chess.current.moves({ square, verbose: true });
       setSourceSquare(square);
       setLegalMoves(moves.map(move => move.to));
@@ -126,7 +126,7 @@ function App() {
       const targetPiece = chess.current.get(targetSquare);
   
       // Check if the target square contains an opponent's piece
-      if (targetPiece && targetPiece.color !== chess.current.turn()) {
+      if (targetPiece && targetPiece.color !== chess.current.turn) {
         // Add the square to potential captures
         potentialCaptures.push(targetSquare);
       }
