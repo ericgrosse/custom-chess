@@ -71,20 +71,32 @@ class Chess {
     return String.fromCharCode(col + 'a'.charCodeAt(0)) + (8 - row).toString();
   }
 
+  isWithinBounds(col, row) {
+    return col >= 0 && col < 8 && row >= 0 && row < 8;
+  }
+
   moves({ square, verbose }) {
     const [col, row] = this.squareToIndices(square);
     const piece = this.board[row][col];
     if (!piece) return [];
-
-    let moves = [];
-    if (piece.type === 'p') {
-      moves = this.getPawnMoves(square, piece);
-    } else if (piece.type === 'n') {
-      moves = this.getKnightMoves(square, piece);
+  
+    switch (piece.type) {
+      case 'p':
+        return this.getPawnMoves(square, piece);
+      case 'n':
+        return this.getKnightMoves(square, piece);
+      case 'r':
+        return this.getRookMoves(square, piece);
+      case 'b':
+        return this.getBishopMoves(square, piece);
+      case 'q':
+        return this.getQueenMoves(square, piece);
+      case 'k':
+        return this.getKingMoves(square, piece);
+      default:
+        return []; // Handle unrecognized piece types or throw an error
     }
-
-    return verbose ? moves : moves.map(move => move.to);
-  }
+  }  
 
   getPawnMoves(square, piece) {
     const [col, row] = this.squareToIndices(square);
@@ -160,6 +172,243 @@ class Chess {
         }
       }
     }
+
+    return moves;
+  }
+
+  getRookMoves(square, piece) {
+    const [col, row] = this.squareToIndices(square);
+    const moves = [];
+
+    // Check horizontally to the right
+    for (let c = col + 1; c < 8; c++) {
+      const target = this.board[row][c];
+      if (!target) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, row),
+          piece: piece,
+          captured: null
+        });
+      } else if (target.color !== piece.color) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, row),
+          piece: piece,
+          captured: target
+        });
+        break;
+      } else {
+        break;
+      }
+    }
+
+    // Check horizontally to the left
+    for (let c = col - 1; c >= 0; c--) {
+      const target = this.board[row][c];
+      if (!target) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, row),
+          piece: piece,
+          captured: null
+        });
+      } else if (target.color !== piece.color) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, row),
+          piece: piece,
+          captured: target
+        });
+        break;
+      } else {
+        break;
+      }
+    }
+
+    // Check vertically upwards
+    for (let r = row + 1; r < 8; r++) {
+      const target = this.board[r][col];
+      if (!target) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(col, r),
+          piece: piece,
+          captured: null
+        });
+      } else if (target.color !== piece.color) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(col, r),
+          piece: piece,
+          captured: target
+        });
+        break;
+      } else {
+        break;
+      }
+    }
+
+    // Check vertically downwards
+    for (let r = row - 1; r >= 0; r--) {
+      const target = this.board[r][col];
+      if (!target) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(col, r),
+          piece: piece,
+          captured: null
+        });
+      } else if (target.color !== piece.color) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(col, r),
+          piece: piece,
+          captured: target
+        });
+        break;
+      } else {
+        break;
+      }
+    }
+
+    return moves;
+  }
+
+  getBishopMoves(square, piece) {
+    const [col, row] = this.squareToIndices(square);
+    const moves = [];
+
+    // Check diagonally upwards-right
+    let r = row + 1;
+    for (let c = col + 1; r < 8 && c < 8; c++, r++) {
+      const target = this.board[r][c];
+      if (!target) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, r),
+          piece: piece,
+          captured: null
+        });
+      } else if (target.color !== piece.color) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, r),
+          piece: piece,
+          captured: target
+        });
+        break;
+      } else {
+        break;
+      }
+    }
+
+    // Check diagonally upwards-left
+    r = row + 1;
+    for (let c = col - 1; r < 8 && c >= 0; c--, r++) {
+      const target = this.board[r][c];
+      if (!target) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, r),
+          piece: piece,
+          captured: null
+        });
+      } else if (target.color !== piece.color) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, r),
+          piece: piece,
+          captured: target
+        });
+        break;
+      } else {
+        break;
+      }
+    }
+
+    // Check diagonally downwards-right
+    r = row - 1;
+    for (let c = col + 1; r >= 0 && c < 8; c++, r--) {
+      const target = this.board[r][c];
+      if (!target) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, r),
+          piece: piece,
+          captured: null
+        });
+      } else if (target.color !== piece.color) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, r),
+          piece: piece,
+          captured: target
+        });
+        break;
+      } else {
+        break;
+      }
+    }
+
+    // Check diagonally downwards-left
+    r = row - 1;
+    for (let c = col - 1; r >= 0 && c >= 0; c--, r--) {
+      const target = this.board[r][c];
+      if (!target) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, r),
+          piece: piece,
+          captured: null
+        });
+      } else if (target.color !== piece.color) {
+        moves.push({
+          from: square,
+          to: this.indicesToSquare(c, r),
+          piece: piece,
+          captured: target
+        });
+        break;
+      } else {
+        break;
+      }
+    }
+
+    return moves;
+  }
+
+  getQueenMoves(square, piece) {
+    const rookMoves = this.getRookMoves(square, piece);
+    const bishopMoves = this.getBishopMoves(square, piece);
+    return [...rookMoves, ...bishopMoves];
+  }
+
+  getKingMoves(square, piece) {
+    const [col, row] = this.squareToIndices(square);
+    const moves = [];
+    const directions = [-1, 0, 1];
+
+    // Iterate over all possible directions around the king
+    directions.forEach(dx => {
+      directions.forEach(dy => {
+        if (dx !== 0 || dy !== 0) { // Exclude the current square
+          const targetCol = col + dx;
+          const targetRow = row + dy;
+          if (this.isWithinBounds(targetCol, targetRow)) {
+            const target = this.board[targetRow][targetCol];
+            if (!target || target.color !== piece.color) {
+              moves.push({
+                from: square,
+                to: this.indicesToSquare(targetCol, targetRow),
+                piece: piece,
+                captured: target
+              });
+            }
+          }
+        }
+      });
+    });
 
     return moves;
   }
